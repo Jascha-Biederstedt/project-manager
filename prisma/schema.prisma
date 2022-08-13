@@ -24,3 +24,11 @@ model User {
 	isSubscriber  Boolean   @default(false)	
 	stripeSubscriptionId String?
 }
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

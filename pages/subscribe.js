@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 
 const Subscribe = () => {
   const router = useRouter();
@@ -25,6 +26,8 @@ const Subscribe = () => {
 
   return (
     <div>
+      <Script src='https://js.stripe.com/v3/' />
+
       <Head>
         <title>Project Manager</title>
         <meta name='description' content='Private Area' />
@@ -46,6 +49,19 @@ const Subscribe = () => {
             });
 
             const data = await res.json();
+
+            if (data.status === 'error') {
+              alert(data.message);
+              return;
+            }
+
+            const sessionId = data.sessionId;
+            const stripePublicKey = data.stripePublicKey;
+
+            const stripe = Stripe(stripePublicKey);
+            stripe.redirectToCheckout({
+              sessionId,
+            });
           }}
         >
           Create a subscription

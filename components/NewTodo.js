@@ -7,7 +7,7 @@ const NewTodo = ({ project_id }) => {
 
   return (
     <form
-      className='mt-5 flex flex-row justify-center text-sm'
+      className='mt-5 flex flex-row text-sm'
       onSubmit={async e => {
         e.preventDefault();
         await fetch('/api/todo', {

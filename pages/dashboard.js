@@ -2,8 +2,23 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
 
-const Dashboard = () => {
+import prisma from 'lib/prisma';
+import { getProjects } from 'lib/data.js';
+
+export const getServerSideProps = async context => {
+  const session = await getSession(context);
+  const projects = await getProjects(prisma, session?.user.id);
+
+  return {
+    props: {
+      projects,
+    },
+  };
+};
+
+const Dashboard = ({ projects }) => {
   const [name, setName] = useState('');
   const router = useRouter();
 
@@ -71,24 +86,17 @@ const Dashboard = () => {
         </form>
 
         <div className='grid sm:grid-cols-2'>
-          <div>
-            <h2 className='mt-10 font-bold'>Project #1</h2>
+          {projects.map(project => (
+            <div>
+              <h2 className='mt-10 font-bold'>{project.name}</h2>
 
-            <ol className='mt-4 list-inside list-decimal'>
-              <li>TODO 1</li>
-              <li>TODO 2</li>
-              <li>TODO 3</li>
-            </ol>
-          </div>
-          <div>
-            <h2 className='mt-10 font-bold'>Project #2</h2>
-
-            <ol className='mt-4 list-inside list-decimal'>
-              <li>TODO 1</li>
-              <li>TODO 2</li>
-              <li>TODO 3</li>
-            </ol>
-          </div>
+              <ol className='mt-4 list-inside list-decimal'>
+                <li>TODO 1</li>
+                <li>TODO 2</li>
+                <li>TODO 3</li>
+              </ol>
+            </div>
+          ))}
         </div>
       </div>
     </div>

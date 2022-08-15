@@ -112,9 +112,11 @@ const Dashboard = ({ projects }) => {
                         router.reload();
                       }}
                     >
-                      ⬜️
+                      {todo.done ? '✅' : '⬜️'}
                     </span>{' '}
-                    {todo.name}
+                    <span className={`${todo.done ? 'line-through' : ''}`}>
+                      {todo.name}
+                    </span>
                   </li>
                 ))}
               </ol>

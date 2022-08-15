@@ -95,7 +95,26 @@ const Dashboard = ({ projects }) => {
               <ol className='mt-4 text-left '>
                 {project.todos.map((todo, todo_index) => (
                   <li key={todo_index}>
-                    <span>⬜️</span> {todo.name}
+                    <span
+                      class='cursor-pointer'
+                      onClick={async e => {
+                        e.preventDefault();
+                        await fetch('/api/complete', {
+                          body: JSON.stringify({
+                            id: todo.id,
+                          }),
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          method: 'POST',
+                        });
+
+                        router.reload();
+                      }}
+                    >
+                      ⬜️
+                    </span>{' '}
+                    {todo.name}
                   </li>
                 ))}
               </ol>

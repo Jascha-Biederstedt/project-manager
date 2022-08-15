@@ -7,6 +7,8 @@ import { getSession } from 'next-auth/react';
 import prisma from 'lib/prisma';
 import { getProjects } from 'lib/data.js';
 
+import NewTodo from 'components/NewTodo';
+
 export const getServerSideProps = async context => {
   const session = await getSession(context);
   const projects = await getProjects(prisma, session?.user.id);
@@ -89,6 +91,7 @@ const Dashboard = ({ projects }) => {
           {projects.map(project => (
             <div>
               <h2 className='mt-10 font-bold'>{project.name}</h2>
+              <NewTodo project_id={project.id} />
 
               <ol className='mt-4 list-inside list-decimal'>
                 <li>TODO 1</li>

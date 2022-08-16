@@ -164,6 +164,20 @@ const Dashboard = ({ projects }) => {
           ))}
         </div>
       </div>
+
+      <p
+        className='text-center text-xs mt-20 hover:underline cursor-pointer'
+        onClick={async e => {
+          e.preventDefault();
+          await fetch('/api/cancel', {
+            method: 'POST',
+          });
+
+          router.reload();
+        }}
+      >
+        cancel your subscription
+      </p>
     </div>
   );
 };

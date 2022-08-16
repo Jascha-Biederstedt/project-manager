@@ -136,7 +136,26 @@ const Dashboard = ({ projects }) => {
                       {todo.done ? '✅' : '⬜️'}
                     </span>{' '}
                     <span className={`${todo.done ? 'line-through' : ''}`}>
-                      {todo.name}
+                      {todo.name}{' '}
+                      <span
+                        className='cursor-pointer'
+                        onClick={async e => {
+                          e.preventDefault();
+                          await fetch('/api/todo', {
+                            body: JSON.stringify({
+                              id: todo.id,
+                            }),
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            method: 'DELETE',
+                          });
+
+                          router.reload();
+                        }}
+                      >
+                        🗑
+                      </span>
                     </span>
                   </li>
                 ))}

@@ -3,7 +3,7 @@ import { getSession } from 'next-auth/react';
 import prisma from 'lib/prisma';
 
 const handler = async (req, res) => {
-  if (req.method !== 'POST') {
+  if (req.method !== 'POST' && req.method !== 'DELETE') {
     return res.status(501).end();
   }
 
@@ -18,14 +18,29 @@ const handler = async (req, res) => {
 
   if (!user) return res.status(401).json({ message: 'User not found' });
 
-  await prisma.todo.create({
-    data: {
-      name: req.body.name,
-      project: {
-        connect: { id: req.body.project_id },
+  if (req.method === 'POST') {
+    await prisma.todo.create({
+      data: {
+        name: req.body.name,
+        project: {
+          connect: { id: req.body.project_id },
+        },
       },
-    },
-  });
+    });
+  }
+
+  if (req.method === 'DELETE') {
+    await prisma.todo.deleteMany({
+      where: {
+        id: req.body.id,
+        project: {
+          owner: {
+            id: user.id,
+          },
+        },
+      },
+    });
+  }
 
   res.end();
 };
